@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Tempahan Bilik PPD Sik</title>
+  
+  <!-- Tailwind CSS & Font Awesome (Font Icons) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js untuk Analitik Dinamik -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- jsPDF & AutoTable untuk Penjanaan PDF Rasmi -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Tailwind Configuration for Cyber & Premium Theme -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ppdBlue: '#1e3a8a',
+            ppdGold: '#d97706',
+            cyberDark: '#0f172a',
+            cyberCard: '#1e293b'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Gaya CSS 3D & Neon Glowing Premium -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Kesan Bayangan & Butang 3D */
+    .tactile-button {
+      box-shadow: 4px 4px 0px #000;
+      border: 2px solid #000;
+      transition: all 0.15s ease;
+    }
+    .tactile-button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .dark .tactile-button-dark {
+      box-shadow: 4px 4px 0px #38bdf8;
+      border: 2px solid #38bdf8;
+    }
+    .dark .tactile-button-dark:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #38bdf8;
+    }
+
+    /* 3D Tactile Card */
+    .tactile-card {
+      box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.08);
+      border: 2px solid #e2e8f0;
+    }
+    .dark .tactile-card {
+      box-shadow: 6px 6px 0px rgba(56, 189, 248, 0.15);
+      border: 2px solid #334155;
+    }
+
+    /* Neon Cyber Glow Effects */
+    .glow-cyan {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    }
+    .glow-magenta {
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Interactive Holographic elements */
+    .hologram-ring-1 {
+      animation: spin 25s linear infinite;
+    }
+    .hologram-ring-2 {
+      animation: spin-reverse 15s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes spin-reverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-slate-800 dark:bg-slate-950 dark:text-gray-100 min-h-screen">
+
+  <!-- TOP HEADER / PORTAL BANNER -->
+  <header class="bg-gradient-to-r from-blue-900 to-indigo-950 text-white border-b-4 border-black dark:border-sky-400 py-6 px-4 sm:px-8 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(14,165,233,0.15),rgba(0,0,0,0))] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
+      <div class="flex items-center gap-4 text-center md:text-left">
+        <div class="bg-white p-2.5 rounded-xl border-2 border-black inline-flex shadow-[3px_3px_0px_#000]">
+          <!-- PPD Logo Placeholder -->
+          <span class="text-3xl font-extrabold text-blue-900">PPD</span>
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">PORTAL TEMPAHAN BILIK</h1>
+          <p class="text-sm text-sky-200 font-medium">Pejabat Pendidikan Daerah Sik, Kedah Darul Aman</p>
+        </div>
+      </div>
+      
+      <!-- Sistem Info & Dwi-Tema Toggle -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Visitor Counter Badge -->
+        <div class="bg-black/40 border border-sky-400/30 px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs sm:text-sm shadow-md glow-cyan">
+          <i class="fa-solid fa-users text-sky-400 animate-pulse"></i>
+          <span>Pelawat Portal: <strong id="visitor-count" class="text-sky-400 font-bold">142</strong></span>
+        </div>
+
+        <!-- Dark/Light Mode Switcher -->
+        <button id="theme-toggle" class="bg-white dark:bg-slate-800 text-slate-800 dark:text-yellow-400 border-2 border-black dark:border-sky-400 px-3 py-1.5 rounded-lg text-sm font-bold shadow-[2px_2px_0px_#000] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000] transition-all">
+          <i id="theme-icon" class="fa-solid fa-moon"></i> <span id="theme-text">Mod Gelap</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SUB-HEADER / TAB NAVIGATION -->
+  <nav class="bg-white dark:bg-slate-900 border-b-2 border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
+      <div class="flex space-x-2 md:space-x-4 py-3 overflow-x-auto whitespace-nowrap">
+        <button onclick="switchTab('analitik')" id="tab-analitik" class="px-5 py-2.5 rounded-lg text-sm font-bold border-2 border-black bg-blue-600 text-white shadow-[3px_3px_0px_#000] transition-all duration-150 flex items-center gap-2">
+          <i class="fa-solid fa-chart-line"></i> Analisis & Statistik
+        </button>
+        <button onclick="switchTab('borang')" id="tab-borang" class="px-5 py-2.5 rounded-lg text-sm font-bold border-2 border-slate-300 dark:border-slate-700 hover:border-black dark:hover:border-white text-slate-700 dark:text-gray-300 transition-all duration-150 flex items-center gap-2">
+          <i class="fa-solid fa-calendar-plus"></i> Borang Tempahan Pintar
+        </button>
+        <button onclick="switchTab('database')" id="tab-database" class="px-5 py-2.5 rounded-lg text-sm font-bold border-2 border-slate-300 dark:border-slate-700 hover:border-black dark:hover:border-white text-slate-700 dark:text-gray-300 transition-all duration-150 flex items-center gap-2">
+          <i class="fa-solid fa-table"></i> Google Spreadsheet
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN WRAPPER -->
+  <main class="max-w-7xl mx-auto p-4 sm:p-8">
+
+    <!-- TAB 1: ANALISIS & STATISTIK (UTAMA) -->
+    <div id="section-analitik" class="space-y-6">
+      
+      <!-- STATISTIK RINGKAS - ROW -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- Card 1: Jumlah Tempahan -->
+        <div class="tactile-card bg-white dark:bg-slate-900 p-5 rounded-xl flex items-center justify-between glow-cyan">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Jumlah Tempahan</p>
+            <h3 id="stat-total-bookings" class="text-3xl font-extrabold mt-1">4</h3>
+          </div>
+          <div class="bg-cyan-100 dark:bg-cyan-950/50 p-4 rounded-xl border border-cyan-500">
+            <i class="fa-solid fa-calendar-check text-2xl text-cyan-600 dark:text-cyan-400"></i>
+          </div>
+        </div>
+        
+        <!-- Card 2: Bilik Popular -->
+        <div class="tactile-card bg-white dark:bg-slate-900 p-5 rounded-xl flex items-center justify-between glow-magenta">
+         <div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Bilik Paling Aktif</p>
+          <h3 id="stat-popular-room" class="text-xl font-extrabold mt-2 whitespace-normal break-words w-48">
+            Sinergi (Besar)
+            </h3>
+          </div>
+          <div class="bg-pink-100 dark:bg-pink-950/50 p-4 rounded-xl border border-pink-500">
+             <i class="fa-solid fa-trophy text-2xl text-pink-600 dark:text-pink-400"></i>
+         </div>
+      </div>
+
+        <!-- Card 3: Sektor Teraktif -->
+        <div class="tactile-card bg-white dark:bg-slate-900 p-5 rounded-xl flex items-center justify-between glow-emerald">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sektor Paling Kerap</p>
+            <h3 id="stat-active-sector" class="text-xl font-extrabold mt-2 whitespace-normal break-words w-48">Pembelajaran</h3>
+          </div>
+          <div class="bg-emerald-100 dark:bg-emerald-950/50 p-4 rounded-xl border border-emerald-500">
+            <i class="fa-solid fa-award text-2xl text-emerald-600 dark:text-emerald-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARTA ANALITIS GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Carta 1: Analisis Mengikut Bilik (Futuristik 3D Hologram Style) -->
+        <div class="tactile-card bg-white dark:bg-slate-900 p-6 rounded-xl relative overflow-hidden">
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.03),transparent_70%)] pointer-events-none"></div>
+          <div class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 flex justify-between items-center relative z-10">
+            <h3 class="text-lg font-bold flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-cyan-500 animate-pulse"></i> Taburan Penggunaan Bilik Mesyuarat
+            </h3>
+            <span class="text-[10px] bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider border border-cyan-400/30">Hologram HUD</span>
+          </div>
+          <div class="relative h-[320px] flex items-center justify-center">
+            <!-- Central Futuristic HUD Overlay behind the Doughnut Chart -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-0">
+              <div class="w-44 h-44 rounded-full border border-dashed border-cyan-500/10 hologram-ring-1 flex items-center justify-center">
+                <div class="w-36 h-36 rounded-full border border-double border-pink-500/20 hologram-ring-2 flex items-center justify-center">
+                  <div class="w-24 h-24 rounded-full bg-slate-500/5 dark:bg-slate-950/60 border border-slate-500/10 shadow-[0_0_20px_rgba(6,182,212,0.1)] flex flex-col items-center justify-center">
+                    <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">ANALISIS</span>
+                    <span class="text-xs font-black text-cyan-400 animate-pulse">SISTEM AKTIF</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <canvas id="chartBilik" class="relative z-10"></canvas>
+          </div>
+        </div>
+
+        <!-- Carta 2: Tempahan Mengikut Sektor (Futuristik 3D Cyber Grid) -->
+        <div class="tactile-card bg-white dark:bg-slate-900 p-6 rounded-xl relative overflow-hidden">
+          <!-- Cyber Matrix Grid Backdrop -->
+          <div class="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(139,92,246,0.03),transparent_70%)] pointer-events-none"></div>
+          
+          <div class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 flex justify-between items-center relative z-10">
+            <h3 class="text-lg font-bold flex items-center gap-2">
+              <i class="fa-solid fa-chart-bar text-pink-500"></i> Tempahan Mengikut Sektor Kerja
+            </h3>
+            <span class="text-[10px] bg-pink-100 dark:bg-pink-950/80 text-pink-600 dark:text-pink-400 font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider border border-pink-400/30">Volumetric Grid</span>
+          </div>
+          <div class="relative h-[320px] flex items-center justify-center">
+            <canvas id="chartSektor" class="relative z-10"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTA PANDUAN PENGGUNA -->
+      <div class="bg-yellow-50 dark:bg-amber-950/30 border-l-4 border-amber-500 p-4 rounded-r-xl">
+        <h4 class="font-bold text-amber-800 dark:text-amber-400 flex items-center gap-2 text-sm sm:text-base">
+          <i class="fa-solid fa-triangle-exclamation"></i> Garis Panduan Tempahan Bilik PPD Sik
+        </h4>
+        <ul class="list-disc list-inside text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 space-y-1">
+          <li>Sila buat tempahan sekurang-kurangnya <strong>3 hari bekerja sebelum tarikh program</strong> dijalankan.</li>
+          <li>Kapasiti maksimum bilik adalah muktamad demi faktor keselamatan dan keselesaan.</li>
+          <li>Sebarang pembatalan atau perubahan masa hendaklah dikemaskini terus dengan menyelaras Unit Pentadbiran.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: BORANG TEMPAHAN PINTAR -->
+    <div id="section-borang" class="hidden">
+      <div class="tactile-card bg-white dark:bg-slate-900 rounded-xl p-6 md:p-8">
+        <div class="border-b-2 border-slate-200 dark:border-slate-800 pb-4 mb-6">
+          <h2 class="text-xl font-extrabold flex items-center gap-2">
+            <i class="fa-solid fa-edit text-blue-600 dark:text-sky-400"></i> Borang Tempahan Bilik Mesyuarat PPD Sik
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Sila isi semua maklumat bertanda (*) dengan lengkap dan sahih.</p>
+        </div>
+
+        <!-- FORM OVERLAP WARNING BAR -->
+        <div id="overlap-warning-alert" class="hidden mb-6 bg-red-100 dark:bg-red-950/40 border-2 border-red-500 p-4 rounded-xl flex items-center gap-3 text-red-700 dark:text-red-400 animate-pulse">
+          <i class="fa-solid fa-ban text-2xl"></i>
+          <div>
+            <p class="font-bold">AMARAN PERTINDIHAN BILIK!</p>
+            <p class="text-sm">Bilik yang dipilih telah ditempah oleh penganjur lain pada tarikh & masa tersebut. Sila tukar bilik atau masa!</p>
+          </div>
+        </div>
+
+        <form id="booking-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+          
+          <!-- GRID LAJUR 1: MAKLUMAT MESYUARAT -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="space-y-4">
+              <h3 class="font-bold text-slate-700 dark:text-gray-300 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-blue-500"></i> Maklumat Aktiviti / Acara
+              </h3>
+              
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Tajuk Mesyuarat / Program *</label>
+                <input type="text" id="form-tajuk" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all" placeholder="Contoh: Bengkel PLC Sektor Pembelajaran">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Pilih Bilik Mesyuarat *</label>
+                <select id="form-jenis-bilik" onchange="validateRoomCapacity()" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all">
+                  <option value="" disabled selected>-- Sila Pilih Bilik --</option>
+                  <option value="BILIK MESYUARAT PKG - 20 ORANG">BILIK MESYUARAT PKG (Kapasiti: 20 orang)</option>                 
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Bilangan Peserta *</label>
+                <input type="number" id="form-bil-peserta" oninput="validateRoomCapacity()" required min="1" class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all" placeholder="Masukkan bilangan tetamu">
+                <p id="capacity-warning" class="text-xs text-red-500 font-bold mt-1 hidden"><i class="fa-solid fa-triangle-exclamation"></i> Bilangan peserta melebihi had kapasiti bilik!</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Sektor / Unit Penganjur *</label>
+                <select id="form-sektor" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all">
+                  <option value="" disabled selected>-- Sila Pilih Sektor --</option>
+                  <option value="PERANCANGAN">SEKTOR PERANCANGAN</option>
+                  <option value="PEMBELAJARAN">SEKTOR PEMBELAJARAN</option>
+                  <option value="PENGURUSAN SEKOLAH">SEKTOR PENGURUSAN SEKOLAH</option>
+                  <option value="PEMBANGUNAN MURID">SEKTOR PEMBANGUNAN MURID</option>
+                  <option value="PENTAKSIRAN & PEPERIKSAAN">SEKTOR PENTAKSIRAN & PEPERIKSAAN</option>
+                  <option value="KAUNSELOR PENDIDIKAN DAERAH">KAUNSELOR PENDIDIKAN DAERAH</option>
+                  <option value="PENGURUSAN">SEKTOR PENGURUSAN</option>
+                  <option value="PTIS">PENGURUSAN TEKNOLOGI MAKLUMAT DAN INFRASTRUKTUR (PTIS)</option>
+                  <option value="BADAN KEBAJIKAN PPD SIK">BADAN KEBAJIKAN PPD SIK</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- GRID LAJUR 2: TARIKH, MASA & PEGAWAI -->
+            <div class="space-y-4">
+              <h3 class="font-bold text-slate-700 dark:text-gray-300 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-user-shield text-blue-500"></i> Penyelaras & Masa Tempahan
+              </h3>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Tarikh Mula *</label>
+                  <input type="date" id="form-tarikh-mula" onchange="runOverlapAndValidationChecks()" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Jam Mula *</label>
+                  <input type="time" id="form-jam-mula" onchange="runOverlapAndValidationChecks()" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Tarikh Tamat *</label>
+                  <input type="date" id="form-tarikh-tamat" onchange="runOverlapAndValidationChecks()" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Jam Tamat *</label>
+                  <input type="time" id="form-jam-tamat" onchange="runOverlapAndValidationChecks()" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Nama Pegawai Penyelaras *</label>
+                <input type="text" id="form-pegawai" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all" placeholder="Nama penuh pegawai">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">No. Telefon (WhatsApp) *</label>
+                  <input type="text" id="form-no-tel" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all" placeholder="Contoh: 60123456789">
+                  <p class="text-[10px] text-slate-400 mt-1">Gunakan kod negara, contoh: 60171234567</p>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">E-mel Penyelaras *</label>
+                  <input type="email" id="form-emel" required class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all" placeholder="emel@moe-dl.edu.my">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SUBMIT BUTTON AREA -->
+          <div class="pt-4 flex flex-col sm:flex-row gap-4 items-center justify-between border-t border-slate-100 dark:border-slate-800">
+            <span class="text-xs text-slate-400 font-bold"><i class="fa-solid fa-shield"></i> PPD Sik Security Check Active</span>
+            <button type="submit" id="submit-btn" class="w-full sm:w-auto px-10 py-3.5 bg-blue-600 dark:bg-blue-700 text-white rounded-xl text-base font-extrabold tactile-button dark:tactile-button-dark flex items-center justify-center gap-3">
+              <span id="btn-text">Hantar Tempahan Bilik</span>
+              <i id="btn-spinner" class="fa-solid fa-spinner animate-spin hidden"></i>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 3: GOOGLE SPREADSHEET DATABASE -->
+    <div id="section-database" class="hidden space-y-4">
+      <div class="tactile-card bg-white dark:bg-slate-900 rounded-xl p-6">
+        
+        <!-- TOOLBAR DATABASE -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <h2 class="text-xl font-extrabold flex items-center gap-2">
+              <i class="fa-solid fa-database text-amber-500"></i> Pangkalan Data Google Sheets
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-1.5">
+              <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> Sambungan Langsung Google Cloud Berjaya
+            </p>
+          </div>
+          
+          <div class="flex flex-wrap gap-2">
+            <!-- Toggle Penapis Column Button -->
+            <button onclick="toggleColumnFilters()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold border-2 border-black dark:border-sky-400 shadow-[2px_2px_0px_#000] dark:shadow-[2px_2px_0px_#38bdf8] active:translate-y-1 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-filter"></i> <span id="btn-toggle-filters-text">Tutup Penapis Lajur</span>
+            </button>
+            <!-- Refresh Button -->
+            <button onclick="fetchLatestData()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-gray-200 rounded-lg text-sm font-bold border-2 border-black active:translate-y-1 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-sync"></i> Kemaskini Data
+            </button>
+            <!-- Export CSV -->
+            <button onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold border-2 border-black active:translate-y-1 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-file-csv"></i> Muat Turun CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- SEARCH / FILTER -->
+        <div class="mb-4">
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+            </span>
+            <input type="text" id="search-input" oninput="filterTable()" class="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg pl-10 pr-4 py-2.5 focus:border-black dark:focus:border-sky-400 outline-none text-sm transition-all" placeholder="Carian global mengikut mana-mana maklumat rekod...">
+          </div>
+        </div>
+
+        <!-- KEMASKINI: TOP PAGINATION CONTROL PANEL -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+          <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold" id="pagination-info-top">
+            Memaparkan 1 hingga 10 daripada 12 rekod
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="prev-page-btn-top" onclick="changePage(-1)" class="px-4 py-2 rounded-lg text-xs font-black transition-all duration-150">
+              <i class="fa-solid fa-chevron-left mr-1"></i> Sebelum
+            </button>
+            <span class="text-xs font-bold px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-inner" id="page-indicator-top">
+              Halaman 1 / 2
+            </span>
+            <button id="next-page-btn-top" onclick="changePage(1)" class="px-4 py-2 rounded-lg text-xs font-black transition-all duration-150">
+              Seterusnya <i class="fa-solid fa-chevron-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- TABLE GRID WRAPPER (PORTRAIT ADJUSTABLE + MOBILE SCROLLABLE) -->
+        <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 animate-fade-in">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+              <tr class="border-b-2 border-slate-200 dark:border-slate-800">
+                <th onclick="handleSort('ID')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  ID Tempahan <i id="sort-icon-ID" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <!-- KEMASKINI: Lebar tajuk kepala lajur ditetapkan untuk responsif wrap-text -->
+                <th onclick="handleSort('TAJUK')" class="p-4 w-[280px] min-w-[200px] cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Tajuk Program <i id="sort-icon-TAJUK" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th onclick="handleSort('JENIS_BILIK')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Bilik <i id="sort-icon-JENIS_BILIK" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th onclick="handleSort('BIL_PESERTA')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Peserta <i id="sort-icon-BIL_PESERTA" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th onclick="handleSort('TARIKH_MULA')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Tarikh Mula <i id="sort-icon-TARIKH_MULA" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th onclick="handleSort('JAM_MULA')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Masa Mula <i id="sort-icon-JAM_MULA" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th onclick="handleSort('TARIKH_TAMAT')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Tarikh Tamat <i id="sort-icon-TARIKH_TAMAT" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th onclick="handleSort('JAM_TAMAT')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Masa Tamat <i id="sort-icon-JAM_TAMAT" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th onclick="handleSort('PEGAWAI')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Penyelaras <i id="sort-icon-PEGAWAI" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <!-- KEMASKINI: Lajur Tarikh Rekod ditambah di Tab 3 -->
+                <th onclick="handleSort('TARIKH_REKOD')" class="p-4 whitespace-nowrap cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none">
+                  Tarikh Rekod <i id="sort-icon-TARIKH_REKOD" class="fa-solid fa-sort ml-1 text-slate-400"></i>
+                </th>
+                <th class="p-4 whitespace-nowrap font-semibold">Tindakan Dokumentasi</th>
+              </tr>
+
+              <!-- KEMASKINI: BARIS PENAPIS LAJUR INTERAKTIF -->
+              <tr id="column-filter-row" class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-all duration-300">
+                <td class="p-2">
+                  <input type="text" id="filter-ID" oninput="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 placeholder-slate-400 font-semibold transition-all" placeholder="ID...">
+                </td>
+                <td class="p-2">
+                  <input type="text" id="filter-TAJUK" oninput="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 placeholder-slate-400 font-semibold transition-all" placeholder="Tapis tajuk...">
+                </td>
+                <td class="p-2">
+                  <select id="filter-JENIS_BILIK" onchange="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 font-semibold transition-all">
+                    <option value="">Semua Bilik</option>
+                  </select>
+                </td>
+                <td class="p-2">
+                  <input type="number" id="filter-BIL_PESERTA" oninput="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 placeholder-slate-400 font-semibold transition-all" placeholder="Min...">
+                </td>
+                <td class="p-2">
+                  <input type="text" id="filter-TARIKH_MULA" onchange="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 font-semibold transition-all">
+                </td>
+                <td class="p-2">
+                  <input type="text" id="filter-JAM_MULA" oninput="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 placeholder-slate-400 font-semibold transition-all" placeholder="Jam...">
+                </td>
+                <td class="p-2">
+                  <input type="text" id="filter-TARIKH_TAMAT" onchange="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 font-semibold transition-all">
+                </td>
+                <td class="p-2">
+                  <input type="text" id="filter-JAM_TAMAT" oninput="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 placeholder-slate-400 font-semibold transition-all" placeholder="Jam...">
+                </td>
+                <td class="p-2 space-y-1.5">
+                  <input type="text" id="filter-PEGAWAI" oninput="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-[11px] outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 placeholder-slate-400 font-semibold transition-all" placeholder="Penyelaras...">
+                  <select id="filter-SEKTOR" onchange="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1 text-[11px] outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 font-semibold transition-all">
+                    <option value="">Semua Sektor</option>
+                  </select>
+                </td>
+                <td class="p-2">
+                  <input type="text" id="filter-TARIKH_REKOD" oninput="filterTableByColumns()" class="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded p-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-gray-100 placeholder-slate-400 font-semibold transition-all" placeholder="Rekod...">
+                </td>
+                <td class="p-2 text-center">
+                  <button onclick="clearColumnFilters()" class="px-2.5 py-1.5 bg-red-100 hover:bg-red-200 dark:bg-red-950/40 dark:hover:bg-red-900/60 text-red-700 dark:text-red-400 rounded-lg text-[10px] font-extrabold border border-red-300 dark:border-red-900 active:translate-y-[1px] transition-all flex items-center justify-center gap-1 mx-auto shadow-sm">
+                    <i class="fa-solid fa-filter-circle-xmark"></i> Padam
+                  </button>
+                </td>
+              </tr>
+            </thead>
+            <tbody id="bookings-table-body" class="divide-y divide-slate-200 dark:divide-slate-800">
+              <!-- Baris data dijanakan secara dinamik oleh JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION CONTROL PANEL (BOTTOM) -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold" id="pagination-info-bottom">
+            Memaparkan 1 hingga 10 daripada 12 rekod
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="prev-page-btn-bottom" onclick="changePage(-1)" class="px-4 py-2 rounded-lg text-xs font-black transition-all duration-150">
+              <i class="fa-solid fa-chevron-left mr-1"></i> Sebelum
+            </button>
+            <span class="text-xs font-bold px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-inner" id="page-indicator-bottom">
+              Halaman 1 / 2
+            </span>
+            <button id="next-page-btn-bottom" onclick="changePage(1)" class="px-4 py-2 rounded-lg text-xs font-black transition-all duration-150">
+              Seterusnya <i class="fa-solid fa-chevron-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SUCCESS CONGRATS POPUP MODAL (100% POP-UP BLOCKER SAFE) -->
+  <div id="success-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="tactile-card bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative border-4 border-black dark:border-sky-400 scale-95 transition-all duration-300">
+      
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 border-b-4 border-black">
+        <button onclick="closeSuccessModal()" class="absolute top-4 right-4 text-white/80 hover:text-white text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 p-2.5 rounded-full">
+            <i class="fa-solid fa-circle-check text-3xl text-white"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-extrabold uppercase">Tempahan Berjaya Disimpan!</h3>
+            <p class="text-xs text-emerald-100">Rekod telah dimasukkan ke dalam Google Spreadsheet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-4">
+        
+        <div class="bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-4 rounded-xl space-y-2.5">
+          <div class="flex justify-between items-center text-xs border-b border-dashed border-slate-300 dark:border-slate-700 pb-2">
+            <span class="font-bold text-slate-400 uppercase">ID Tempahan</span>
+            <span id="modal-booking-id" class="font-black text-red-600 text-sm">PPDSIK-999999</span>
+          </div>
+          <div class="flex justify-between text-xs sm:text-sm">
+            <span class="text-slate-500">Tajuk:</span>
+            <strong id="modal-booking-title" class="text-right max-w-[250px] truncate">Tajuk Program</strong>
+          </div>
+          <div class="flex justify-between text-xs sm:text-sm">
+            <span class="text-slate-500">Bilik:</span>
+            <strong id="modal-booking-room" class="text-right">Bilik Mesyuarat Sinergi</strong>
+          </div>
+          <div class="flex justify-between text-xs sm:text-sm">
+            <span class="text-slate-500">Masa:</span>
+            <strong id="modal-booking-time" class="text-right text-emerald-600 dark:text-emerald-400">Tarikh & Jam</strong>
+          </div>
+          <div class="flex justify-between text-xs sm:text-sm">
+            <span class="text-slate-500">Pegawai Penyelaras:</span>
+            <strong id="modal-booking-staff" class="text-right">Nama Pegawai</strong>
+          </div>
+        </div>
+
+        <div class="bg-amber-50 dark:bg-amber-950/20 border-l-4 border-amber-500 p-3 rounded-r-lg">
+          <p class="text-xs text-amber-800 dark:text-amber-300">
+            <strong>Notifikasi Automatik:</strong> E-mel pengesahan rasmi telah dihantar ke e-mel pegawai berkenaan.
+          </p>
+        </div>
+
+        <!-- 3D HIGHLY INTERACTIVE REDIRECT BUTTONS -->
+        <div class="grid grid-cols-1 gap-3 pt-2">
+          
+          <!-- WHATSAPP BUTTON (PULSING GREEN) -->
+          <button id="modal-whatsapp-btn" onclick="triggerWhatsAppFromModal()" class="w-full py-4 bg-emerald-500 dark:bg-emerald-600 hover:bg-emerald-600 text-white rounded-xl text-base font-black border-2 border-black shadow-[4px_4px_0px_#000] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000] transition-all flex items-center justify-center gap-3 animate-bounce">
+            <i class="fa-brands fa-whatsapp text-2xl"></i>
+            <span>Hantar Slip WhatsApp Sekarang</span>
+          </button>
+
+          <!-- PDF PRINT BUTTON -->
+          <button id="modal-pdf-btn" onclick="triggerPDFFromModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-extrabold border-2 border-black shadow-[4px_4px_0px_#000] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000] transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>Muat Turun Surat Pengesahan PDF</span>
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-end">
+        <button onclick="closeSuccessModal()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-xs font-bold border-2 border-black transition-all">
+          Tutup Panel
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT: LOGIK UTAMA SISTEM -->
+  <script>
+    // DATA MOCKUP (Ditambah sehingga 12 rekod untuk demonstrasi pembahagian halaman / pagination)
+    let bookingsState = [
+      {
+        "ID": "PPDSIK-392812",
+        "TAJUK": "Mesyuarat Guru Besar Daerah Sik Bil. 1/2026",
+        "JENIS_BILIK": "BILIK MESYUARAT SINERGI - 30 ORANG",
+        "BIL_PESERTA": "85",
+        "PEGAWAI": "Encik Ahmad Farhan",
+        "NO_TEL": "60111223344",
+        "EMEL": "ahmad.farhan@moe-dl.edu.my",
+        "SEKTOR": "PENGURUSAN SEKOLAH",
+        "TARIKH_MULA": "2026-06-21",
+        "JAM_MULA": "08:30",
+        "TARIKH_TAMAT": "2026-06-21",
+        "JAM_TAMAT": "13:00",
+        "TARIKH_REKOD": "2026-06-15 09:20:01"
+      },
+      {
+        "ID": "PPDSIK-948271",
+        "TAJUK": "Bengkel Pemantapan PdPr Sains & Matematik",
+        "JENIS_BILIK": "DEWAN BENGKEL PKG - 40 ORANG",
+        "BIL_PESERTA": "38",
+        "PEGAWAI": "Puan Siti Aminah",
+        "NO_TEL": "60175551234",
+        "EMEL": "siti.aminah@moe-dl.edu.my",
+        "SEKTOR": "PEMBELAJARAN",
+        "TARIKH_MULA": "2026-06-22",
+        "JAM_MULA": "09:00",
+        "TARIKH_TAMAT": "2026-06-22",
+        "JAM_TAMAT": "16:30",
+        "TARIKH_REKOD": "2026-06-15 11:15:33"
+      },
+      {
+        "ID": "PPDSIK-109283",
+        "TAJUK": "Penyelarasan Taklimat SPM & STPM 2026",
+        "JENIS_BILIK": "BILIK TAKLIMAT B PKG - 35 ORANG",
+        "BIL_PESERTA": "30",
+        "PEGAWAI": "Encik Khairul Azmi",
+        "NO_TEL": "60194449876",
+        "EMEL": "khairul.azmi@moe-dl.edu.my",
+        "SEKTOR": "PENTAKSIRAN & PEPERIKSAAN",
+        "TARIKH_MULA": "2026-06-23",
+        "JAM_MULA": "10:00",
+        "TARIKH_TAMAT": "2026-06-23",
+        "JAM_TAMAT": "12:30",
+        "TARIKH_REKOD": "2026-06-16 08:45:10"
+      },
+      {
+        "ID": "PPDSIK-554432",
+        "TAJUK": "Perjumpaan Kaunselor Sekolah Sik",
+        "JENIS_BILIK": "BILIK MESYUARAT PKG - 20 ORANG",
+        "BIL_PESERTA": "15",
+        "PEGAWAI": "Dr. Halim Sidek",
+        "NO_TEL": "60129998877",
+        "EMEL": "halim.sidek@moe-dl.edu.my",
+        "SEKTOR": "KAUNSELOR PENDIDIKAN DAERAH",
+        "TARIKH_MULA": "2026-06-24",
+        "JAM_MULA": "14:00",
+        "TARIKH_TAMAT": "2026-06-24",
+        "JAM_TAMAT": "17:00",
+        "TARIKH_REKOD": "2026-06-16 10:02:11"
+      },
+      {
+        "ID": "PPDSIK-654321",
+        "TAJUK": "Taklimat Pengurusan Aset & Stor PPD",
+        "JENIS_BILIK": "BILIK MESYUARAT PKG - 20 ORANG",
+        "BIL_PESERTA": "18",
+        "PEGAWAI": "Puan Noraini Yusof",
+        "NO_TEL": "60134442211",
+        "EMEL": "noraini.yusof@moe-dl.edu.my",
+        "SEKTOR": "PENGURUSAN",
+        "TARIKH_MULA": "2026-06-25",
+        "JAM_MULA": "09:00",
+        "TARIKH_TAMAT": "2026-06-25",
+        "JAM_TAMAT": "12:00",
+        "TARIKH_REKOD": "2026-06-16 11:30:00"
+      },
+      {
+        "ID": "PPDSIK-754123",
+        "TAJUK": "Bengkel Pemantapan Sistem HRMIS Kedah",
+        "JENIS_BILIK": "DEWAN BENGKEL PKG - 40 ORANG",
+        "BIL_PESERTA": "35",
+        "PEGAWAI": "Encik Rosli Rahman",
+        "NO_TEL": "60156667788",
+        "EMEL": "rosli.rahman@moe-dl.edu.my",
+        "SEKTOR": "PTIS",
+        "TARIKH_MULA": "2026-06-26",
+        "JAM_MULA": "08:30",
+        "TARIKH_TAMAT": "2026-06-26",
+        "JAM_TAMAT": "16:30",
+        "TARIKH_REKOD": "2026-06-17 08:15:00"
+      },
+      {
+        "ID": "PPDSIK-889912",
+        "TAJUK": "Mesyuarat Sukan Sekolah Peringkat Daerah",
+        "JENIS_BILIK": "BILIK TAKLIMAT B PKG - 35 ORANG",
+        "BIL_PESERTA": "32",
+        "PEGAWAI": "Encik Zulkifli Ali",
+        "NO_TEL": "60193334455",
+        "EMEL": "zulkifli.ali@moe-dl.edu.my",
+        "SEKTOR": "PEMBANGUNAN MURID",
+        "TARIKH_MULA": "2026-06-29",
+        "JAM_MULA": "10:00",
+        "TARIKH_TAMAT": "2026-06-29",
+        "JAM_TAMAT": "13:00",
+        "TARIKH_REKOD": "2026-06-17 09:00:00"
+      },
+      {
+        "ID": "PPDSIK-112233",
+        "TAJUK": "Taklimat Dasar KPM Ke-2 Sektor Perancangan",
+        "JENIS_BILIK": "BILIK MESYUARAT SINERGI - 30 ORANG",
+        "BIL_PESERTA": "28",
+        "PEGAWAI": "Puan Hajah Salmah",
+        "NO_TEL": "60127771122",
+        "EMEL": "salmah@moe-dl.edu.my",
+        "SEKTOR": "PERANCANGAN",
+        "TARIKH_MULA": "2026-06-30",
+        "JAM_MULA": "09:00",
+        "TARIKH_TAMAT": "2026-06-30",
+        "JAM_TAMAT": "12:30",
+        "TARIKH_REKOD": "2026-06-17 10:25:00"
+      },
+      {
+        "ID": "PPDSIK-445566",
+        "TAJUK": "Mesyuarat Badan Kebajikan PPD Sik Kali Ke-4",
+        "JENIS_BILIK": "BILIK MESYUARAT PKG - 20 ORANG",
+        "BIL_PESERTA": "16",
+        "PEGAWAI": "Encik Kamarudin Hassan",
+        "NO_TEL": "60184445566",
+        "EMEL": "kamarudin@moe-dl.edu.my",
+        "SEKTOR": "BADAN KEBAJIKAN PPD SIK",
+        "TARIKH_MULA": "2026-07-01",
+        "JAM_MULA": "14:30",
+        "TARIKH_TAMAT": "2026-07-01",
+        "JAM_TAMAT": "16:30",
+        "TARIKH_REKOD": "2026-06-17 11:00:00"
+      },
+      {
+        "ID": "PPDSIK-778899",
+        "TAJUK": "Penyelarasan Kerja Kaunselor Bersama Pengetua",
+        "JENIS_BILIK": "BILIK TAKLIMAT B PKG - 35 ORANG",
+        "BIL_PESERTA": "30",
+        "PEGAWAI": "Dr. Halim Sidek",
+        "NO_TEL": "60129998877",
+        "EMEL": "halim.sidek@moe-dl.edu.my",
+        "SEKTOR": "KAUNSELOR PENDIDIKAN DAERAH",
+        "TARIKH_MULA": "2026-07-02",
+        "JAM_MULA": "09:00",
+        "TARIKH_TAMAT": "2026-07-02",
+        "JAM_TAMAT": "13:00",
+        "TARIKH_REKOD": "2026-06-17 11:30:00"
+      },
+      {
+        "ID": "PPDSIK-990011",
+        "TAJUK": "Latihan Peningkatan Profesionalisme Sektor Pembelajaran",
+        "JENIS_BILIK": "DEWAN BENGKEL PKG - 40 ORANG",
+        "BIL_PESERTA": "38",
+        "PEGAWAI": "Puan Siti Aminah",
+        "NO_TEL": "60175551234",
+        "EMEL": "siti.aminah@moe-dl.edu.my",
+        "SEKTOR": "PEMBELAJARAN",
+        "TARIKH_MULA": "2026-07-03",
+        "JAM_MULA": "08:30",
+        "TARIKH_TAMAT": "2026-07-03",
+        "JAM_TAMAT": "16:30",
+        "TARIKH_REKOD": "2026-06-17 11:45:00"
+      },
+      {
+        "ID": "PPDSIK-223344",
+        "TAJUK": "Mesyuarat Sektor Pembangunan Murid Bil. 2",
+        "JENIS_BILIK": "BILIK MESYUARAT SINERGI - 30 ORANG",
+        "BIL_PESERTA": "25",
+        "PEGAWAI": "Encik Zulkifli Ali",
+        "NO_TEL": "60193334455",
+        "EMEL": "zulkifli.ali@moe-dl.edu.my",
+        "SEKTOR": "PEMBANGUNAN MURID",
+        "TARIKH_MULA": "2026-07-06",
+        "JAM_MULA": "11:00",
+        "TARIKH_TAMAT": "2026-07-06",
+        "JAM_TAMAT": "13:00",
+        "TARIKH_REKOD": "2026-06-17 12:00:00"
+      }
+    ];
+
+    let currentNewBooking = null; // Menyimpan tempahan yang baru sahaja berjaya dihantar
+    let chartInstanceBilik = null;
+    let chartInstanceSektor = null;
+    
+    // Keadaan Isihan Semasa (Current Sort State)
+    let currentSort = { key: null, direction: 'asc' };
+
+    // Keadaan Pembahagian Halaman (Pagination State)
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
+    // KAPASITI BILIK MAKSIMUM MAP
+    const ROOM_CAPACITIES = {
+      "BILIK MESYUARAT SINERGI - 30 ORANG": 100,
+      "BILIK MESYUARAT PKG - 20 ORANG": 100,
+      "DEWAN BENGKEL PKG - 40 ORANG": 100,
+      "BILIK TAKLIMAT B PKG - 35 ORANG": 100
+    };
+
+    /**
+     * Memformat string masa hh:mm kepada format penuh hh:mm:ss
+     * Diperkemas dengan pengesanan objek tarikh penuh JS
+     */
+    function formatTimeWithSeconds(timeVal) {
+      if (!timeVal) return '';
+
+      // Sekiranya parameter yang diterima adalah Objek Tarikh (Date Object)
+      if (timeVal instanceof Date) {
+        const hh = String(timeVal.getHours()).padStart(2, '0');
+        const mm = String(timeVal.getMinutes()).padStart(2, '0');
+        const ss = String(timeVal.getSeconds()).padStart(2, '0');
+        return `${hh}:${mm}:${ss}`;
+      }
+
+      // Tukar ke format string dan buang ruang kosong
+      let str = String(timeVal).trim();
+
+      // Semak jika rentetan adalah format Date String penuh (Mengandungi GMT, zon waktu, dll)
+      if (str.includes(' ') && (str.includes('GMT') || str.includes('Standard Time') || /^[A-Za-z]{3}\s[A-Za-z]{3}/.test(str))) {
+        try {
+          const parsedDate = new Date(str);
+          if (!isNaN(parsedDate.getTime())) {
+            const hh = String(parsedDate.getHours()).padStart(2, '0');
+            const mm = String(parsedDate.getMinutes()).padStart(2, '0');
+            const ss = String(parsedDate.getSeconds()).padStart(2, '0');
+            return `${hh}:${mm}:${ss}`;
+          }
+        } catch (e) {
+          // Gagal parse rentetan tarikh, biarkan ia turun ke logik seterusnya
+        }
+      }
+
+      // Logik asal pembahagian titik bertindih (split colons) jika ia adalah hh:mm atau hh:mm:ss bersih
+      const parts = str.split(':');
+      if (parts.length >= 2) {
+        let hh = parts[0].trim();
+        let mm = parts[1].trim();
+        let ss = parts[2] ? parts[2].trim() : '00';
+
+        // Pembersihan tambahan
+        if (hh.includes(' ')) {
+          const hhParts = hh.split(' ');
+          hh = hhParts[hhParts.length - 1];
+        }
+        if (ss.includes(' ')) {
+          ss = ss.split(' ')[0];
+        }
+
+        hh = hh.padStart(2, '0').substring(0, 2);
+        mm = mm.padStart(2, '0').substring(0, 2);
+        ss = ss.padStart(2, '0').substring(0, 2);
+
+        return `${hh}:${mm}:${ss}`;
+      }
+
+      return str;
+    }
+
+    /**
+     * ON LOAD INITIALIZATION
+     */
+    window.onload = function() {
+      // Inisialisasi tema (Mod Gelap / Cerah)
+      initTheme();
+      
+      // Ambil data terkini dari pelayan Apps Script jika ada
+      fetchLatestData();
+      
+      // Tetapkan tarikh minimum borang kepada tarikh hari ini
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('form-tarikh-mula').min = today;
+      document.getElementById('form-tarikh-tamat').min = today;
+    };
+
+    /**
+     * TUKAR TAB ANTARAMUKA
+     */
+    function switchTab(tabId) {
+      // Sembunyikan semua seksyen
+      document.getElementById('section-analitik').classList.add('hidden');
+      document.getElementById('section-borang').classList.add('hidden');
+      document.getElementById('section-database').classList.add('hidden');
+
+      // Padam gaya aktif pada semua butang tab
+      const tabs = ['analitik', 'borang', 'database'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (btn) {
+          btn.className = "px-5 py-2.5 rounded-lg text-sm font-bold border-2 border-slate-300 dark:border-slate-700 hover:border-black dark:hover:border-white text-slate-700 dark:text-gray-300 transition-all duration-150 flex items-center gap-2";
+        }
+      });
+
+      // Paparkan seksyen yang dipilih
+      document.getElementById(`section-${tabId}`).classList.remove('hidden');
+      
+      // Berikan reka bentuk aktif 3D pada tab yang ditekan
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if (activeBtn) {
+        activeBtn.className = "px-5 py-2.5 rounded-lg text-sm font-bold border-2 border-black bg-blue-600 text-white shadow-[3px_3px_0px_#000] transition-all duration-150 flex items-center gap-2";
+      }
+
+      // Bina semula carta jika tab analitis diakses
+      if (tabId === 'analitik') {
+        buildCharts();
+      }
+    }
+
+    /**
+     * TEMA DWI-MOD (DARK & LIGHT)
+     */
+    function initTheme() {
+      const toggleBtn = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+
+      // Semak simpanan tema pengguna terdahulu
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        themeIcon.className = "fa-solid fa-sun";
+        themeText.textContent = "Mod Cerah";
+      } else {
+        document.documentElement.classList.remove('dark');
+        themeIcon.className = "fa-solid fa-moon";
+        themeText.textContent = "Mod Gelap";
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+          themeIcon.className = "fa-solid fa-moon";
+          themeText.textContent = "Mod Gelap";
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+          themeIcon.className = "fa-solid fa-sun";
+          themeText.textContent = "Mod Cerah";
+        }
+        // Redraw charts to suit theme colors if visible
+        buildCharts();
+        // Redraw table for button styles to adapt
+        renderTableAndStats();
+      });
+    }
+
+    /**
+     * AMBIL DATA DARIPADA GOOGLE SCRIPT (MOCK SECARA AUTOMATIK JIKA TIADA)
+     */
+    function fetchLatestData() {
+      // Tunjukkan kaunter pelawat mockup secara lalai
+      let fallbackVisitorCount = 285;
+      document.getElementById('visitor-count').textContent = fallbackVisitorCount;
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        // Panggil kaunter pelawat sebenar dari server-side
+        google.script.run.withSuccessHandler(function(count) {
+          document.getElementById('visitor-count').textContent = count;
+        }).getVisitorCount();
+
+        // Panggil data tempahan dari server-side
+        google.script.run.withSuccessHandler(function(data) {
+          if (data && data.length > 0) {
+            bookingsState = data;
+          }
+          populateFilterDropdowns();
+          renderTableAndStats();
+        }).getBookings();
+      } else {
+        // Run mockup state jika tiada persekitaran Google Apps Script (e.g. testing)
+        populateFilterDropdowns();
+        renderTableAndStats();
+      }
+    }
+
+    /**
+     * DYNAMICALLY POPULATE COLUMN FILTER DROPDOWNS
+     */
+    function populateFilterDropdowns() {
+      const bilikSelect = document.getElementById('filter-JENIS_BILIK');
+      const sektorSelect = document.getElementById('filter-SEKTOR');
+      
+      if (!bilikSelect || !sektorSelect) return;
+
+      // Preserve active selections
+      const selectedBilik = bilikSelect.value;
+      const selectedSektor = sektorSelect.value;
+
+      // Populate Bilik Option
+      bilikSelect.innerHTML = '<option value="">Semua Bilik</option>';
+      const uniqueBiliks = [...new Set(bookingsState.map(b => b.JENIS_BILIK))];
+      uniqueBiliks.sort().forEach(bilik => {
+        const opt = document.createElement('option');
+        opt.value = bilik;
+        opt.textContent = bilik.replace(" - 30 ORANG", "").replace(" - 20 ORANG", "").replace(" - 40 ORANG", "").replace(" - 35 ORANG", "");
+        bilikSelect.appendChild(opt);
+      });
+
+      // Populate Sektor Option
+      sektorSelect.innerHTML = '<option value="">Semua Sektor</option>';
+      const uniqueSektors = [...new Set(bookingsState.map(b => b.SEKTOR))];
+      uniqueSektors.sort().forEach(sektor => {
+        const opt = document.createElement('option');
+        opt.value = sektor;
+        opt.textContent = sektor;
+        sektorSelect.appendChild(opt);
+      });
+
+      // Re-apply values
+      bilikSelect.value = selectedBilik;
+      sektorSelect.value = selectedSektor;
+    }
+
+    /**
+     * MENAPIS DATA BERDASARKAN CARIAN PENGGUNA (GLOBAL & RUANGAN)
+     */
+    function getFilteredBookings() {
+      const globalInput = document.getElementById('search-input').value.toLowerCase().trim();
+      
+      // Ambil nilai daripada setiap elemen penapis lajur
+      const fId = document.getElementById('filter-ID')?.value.toLowerCase().trim() || '';
+      const fTajuk = document.getElementById('filter-TAJUK')?.value.toLowerCase().trim() || '';
+      const fBilik = document.getElementById('filter-JENIS_BILIK')?.value || '';
+      const fPeserta = document.getElementById('filter-BIL_PESERTA')?.value.trim() || '';
+      const fTMula = document.getElementById('filter-TARIKH_MULA')?.value || '';
+      const fJMula = document.getElementById('filter-JAM_MULA')?.value.toLowerCase().trim() || '';
+      const fTTamat = document.getElementById('filter-TARIKH_TAMAT')?.value || '';
+      const fJTamat = document.getElementById('filter-JAM_TAMAT')?.value.toLowerCase().trim() || '';
+      const fPegawai = document.getElementById('filter-PEGAWAI')?.value.toLowerCase().trim() || '';
+      const fSektor = document.getElementById('filter-SEKTOR')?.value || '';
+      const fTRekod = document.getElementById('filter-TARIKH_REKOD')?.value.toLowerCase().trim() || '';
+
+      return bookingsState.filter(b => {
+        // 1. Semakan Penapis Global
+        if (globalInput) {
+          const matchesGlobal = b.ID.toLowerCase().includes(globalInput) ||
+                                b.TAJUK.toLowerCase().includes(globalInput) ||
+                                b.JENIS_BILIK.toLowerCase().includes(globalInput) ||
+                                b.PEGAWAI.toLowerCase().includes(globalInput) ||
+                                b.SEKTOR.toLowerCase().includes(globalInput) ||
+                                b.TARIKH_MULA.toLowerCase().includes(globalInput) ||
+                                b.TARIKH_TAMAT.toLowerCase().includes(globalInput) ||
+                                (b.TARIKH_REKOD && b.TARIKH_REKOD.toLowerCase().includes(globalInput));
+          if (!matchesGlobal) return false;
+        }
+
+        // 2. Semakan Penapis Lajur Individu
+        if (fId && !b.ID.toLowerCase().includes(fId)) return false;
+        if (fTajuk && !b.TAJUK.toLowerCase().includes(fTajuk)) return false;
+        if (fBilik && b.JENIS_BILIK !== fBilik) return false;
+        
+        if (fPeserta) {
+          const pValue = parseInt(b.BIL_PESERTA, 10) || 0;
+          const filterPValue = parseInt(fPeserta, 10);
+          if (!isNaN(filterPValue) && pValue < filterPValue) return false;
+        }
+
+        if (fTMula && b.TARIKH_MULA !== fTMula) return false;
+        if (fJMula && !b.JAM_MULA.toLowerCase().includes(fJMula)) return false;
+        if (fTTamat && b.TARIKH_TAMAT !== fTTamat) return false;
+        if (fJTamat && !b.JAM_TAMAT.toLowerCase().includes(fJTamat)) return false;
+        if (fPegawai && !b.PEGAWAI.toLowerCase().includes(fPegawai)) return false;
+        if (fSektor && b.SEKTOR !== fSektor) return false;
+        if (fTRekod && (!b.TARIKH_REKOD || !b.TARIKH_REKOD.toLowerCase().includes(fTRekod))) return false;
+
+        return true;
+      });
+    }
+
+    /**
+     * DICETUS APABILA INPUT PENAPIS LAJUR BERUBAH
+     */
+    function filterTableByColumns() {
+      currentPage = 1;
+      renderTableAndStats();
+    }
+
+    /**
+     * KOSONGKAN / RESET SEMUA PENAPIS LAJUR
+     */
+    function clearColumnFilters() {
+      document.getElementById('filter-ID').value = '';
+      document.getElementById('filter-TAJUK').value = '';
+      document.getElementById('filter-JENIS_BILIK').value = '';
+      document.getElementById('filter-BIL_PESERTA').value = '';
+      document.getElementById('filter-TARIKH_MULA').value = '';
+      document.getElementById('filter-JAM_MULA').value = '';
+      document.getElementById('filter-TARIKH_TAMAT').value = '';
+      document.getElementById('filter-JAM_TAMAT').value = '';
+      document.getElementById('filter-PEGAWAI').value = '';
+      document.getElementById('filter-SEKTOR').value = '';
+      document.getElementById('filter-TARIKH_REKOD').value = '';
+
+      currentPage = 1;
+      renderTableAndStats();
+      showCustomNotification("Penapis lajur telah diset semula!");
+    }
+
+    /**
+     * TOGGLE PAPARAN BARIS PENAPIS LAJUR
+     */
+    function toggleColumnFilters() {
+      const row = document.getElementById('column-filter-row');
+      const btnText = document.getElementById('btn-toggle-filters-text');
+      
+      if (row.classList.contains('hidden')) {
+        row.classList.remove('hidden');
+        btnText.textContent = "Tutup Penapis Lajur";
+      } else {
+        row.classList.add('hidden');
+        btnText.textContent = "Buka Penapis Lajur";
+      }
+    }
+
+    /**
+     * JANA JADUAL, ANALITIS & STATISTIK
+     */
+    function renderTableAndStats() {
+      // 1. Kemaskini statistik ringkas menggunakan kesemua data sedia ada
+      document.getElementById('stat-total-bookings').textContent = bookingsState.length;
+
+      // Cari bilik mesyuarat paling aktif
+      const roomCounts = {};
+      const sectorCounts = {};
+      bookingsState.forEach(b => {
+        roomCounts[b.JENIS_BILIK] = (roomCounts[b.JENIS_BILIK] || 0) + 1;
+        sectorCounts[b.SEKTOR] = (sectorCounts[b.SEKTOR] || 0) + 1;
+      });
+
+      let topRoom = "Tiada Tempahan";
+      let maxRoom = 0;
+      for (const [room, count] of Object.entries(roomCounts)) {
+        if (count > maxRoom) {
+          maxRoom = count;
+          topRoom = room.replace(" (BESAR)", "").replace(" - 20 ORANG", "").replace(" - 40 ORANG", "").replace(" - 35 ORANG", "");
+        }
+      }
+      document.getElementById('stat-popular-room').textContent = topRoom;
+
+      let topSector = "Tiada Tempahan";
+      let maxSector = 0;
+      for (const [sector, count] of Object.entries(sectorCounts)) {
+        if (count > maxSector) {
+          maxSector = count;
+          topSector = sector;
+        }
+      }
+      document.getElementById('stat-active-sector').textContent = topSector;
+
+      // 2. Tapis data & selaraskan pembahagian halaman (Pagination)
+      const filteredBookings = getFilteredBookings();
+      const totalRecords = filteredBookings.length;
+      const totalPages = Math.ceil(totalRecords / rowsPerPage) || 1;
+
+      // Laraskan jika halaman semasa melebihi jumlah halaman tersedia
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      // Potong data mengikut sela halaman semasa
+      const startIndex = (currentPage - 1) * rowsPerPage;
+      const endIndex = Math.min(startIndex + rowsPerPage, totalRecords);
+      const paginatedData = filteredBookings.slice(startIndex, endIndex);
+
+      // KEMASKINI: Kemaskini panel kawalan halaman bagi Atas dan Bawah
+      const paginationText = totalRecords > 0 
+        ? `Memaparkan ${startIndex + 1} hingga ${endIndex} daripada ${totalRecords} rekod`
+        : "Tiada rekod untuk dipaparkan";
+      
+      const pageIndicatorText = `Halaman ${currentPage} / ${totalPages}`;
+
+      document.getElementById('pagination-info-top').textContent = paginationText;
+      document.getElementById('pagination-info-bottom').textContent = paginationText;
+      
+      document.getElementById('page-indicator-top').textContent = pageIndicatorText;
+      document.getElementById('page-indicator-bottom').textContent = pageIndicatorText;
+
+      // Kemaskini butang halaman mengikut kestabilan interaksi tema 3D
+      const prevBtnTop = document.getElementById('prev-page-btn-top');
+      const nextBtnTop = document.getElementById('next-page-btn-top');
+      const prevBtnBottom = document.getElementById('prev-page-btn-bottom');
+      const nextBtnBottom = document.getElementById('next-page-btn-bottom');
+
+      prevBtnTop.disabled = (currentPage === 1);
+      prevBtnBottom.disabled = (currentPage === 1);
+      nextBtnTop.disabled = (currentPage === totalPages);
+      nextBtnBottom.disabled = (currentPage === totalPages);
+
+      // Reka bentuk visual dinamik untuk butang aktif/nyahaktif (Atas & Bawah)
+      [prevBtnTop, nextBtnTop, prevBtnBottom, nextBtnBottom].forEach(btn => {
+        if (btn.disabled) {
+          btn.className = "px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 rounded-lg text-xs font-bold border-2 border-slate-200 dark:border-slate-800 cursor-not-allowed opacity-50";
+        } else {
+          btn.className = "px-4 py-2 bg-white dark:bg-slate-900 text-slate-800 dark:text-gray-200 rounded-lg text-xs font-black border-2 border-black dark:border-sky-400 shadow-[3px_3px_0px_#000] dark:shadow-[3px_3px_0px_#38bdf8] hover:translate-y-[-1px] active:translate-y-[1px] transition-all";
+        }
+      });
+
+      // 3. Bina Struktur Baris Jadual Google Sheets
+      const tbody = document.getElementById('bookings-table-body');
+      tbody.innerHTML = '';
+
+      if (paginatedData.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="11" class="p-8 text-center text-slate-400 font-bold">
+              <i class="fa-solid fa-folder-open text-3xl block mb-2"></i> Tiada Tempahan Direkodkan Lagi.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      paginatedData.forEach(b => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 dark:hover:bg-slate-900/60 transition-colors";
+        tr.innerHTML = `
+          <td class="p-4 font-bold text-red-600 whitespace-nowrap">${b.ID}</td>
+          
+          <!-- PENAMBAHAN UTAMA: Menyingkirkan 'truncate' dan menggantikannya dengan wrap text (whitespace-normal & break-words) -->
+          <td class="p-4 font-semibold max-w-[300px] whitespace-normal break-words leading-relaxed text-slate-900 dark:text-gray-100">
+            ${b.TAJUK}
+          </td>
+          
+          <td class="p-4 text-xs font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">${b.JENIS_BILIK}</td>
+          <td class="p-4 whitespace-nowrap"><span class="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 px-2 py-1 rounded text-xs font-bold">${b.BIL_PESERTA} Orang</span></td>
+          <td class="p-4 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">${b.TARIKH_MULA}</td>
+          <td class="p-4 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">${formatTimeWithSeconds(b.JAM_MULA)}</td>
+          <td class="p-4 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">${b.TARIKH_TAMAT}</td>
+          <td class="p-4 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">${formatTimeWithSeconds(b.JAM_TAMAT)}</td>
+          <td class="p-4 whitespace-nowrap">
+            <p class="font-bold">${b.PEGAWAI}</p>
+            <p class="text-[10px] text-slate-400">${b.SEKTOR}</p>
+          </td>
+          <!-- KEMASKINI: Lajur Paparan Tarikh Rekod -->
+          <td class="p-4 whitespace-nowrap font-medium text-slate-600 dark:text-slate-300">${b.TARIKH_REKOD || '-'}</td>
+          <td class="p-4 whitespace-nowrap flex items-center gap-2">
+            <!-- PDF Action -->
+            <button onclick="generateSinglePDF('${b.ID}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-bold border border-black active:translate-y-1 transition-all flex items-center gap-1 shadow-sm">
+              <i class="fa-solid fa-file-pdf"></i> PDF
+            </button>
+            <!-- WhatsApp Action -->
+            <button onclick="sendWhatsAppDirect('${b.ID}')" class="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-xs font-bold border border-black active:translate-y-1 transition-all flex items-center gap-1 shadow-sm">
+              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // 4. Bina Carta & Kemaskini Ikon Isihan
+      buildCharts();
+      updateSortIcons();
+    }
+
+    /**
+     * TUKAR HALAMAN (CHANGE PAGE LOGIC)
+     */
+    function changePage(direction) {
+      const filteredBookings = getFilteredBookings();
+      const totalPages = Math.ceil(filteredBookings.length / rowsPerPage) || 1;
+      const targetPage = currentPage + direction;
+
+      if (targetPage >= 1 && targetPage <= totalPages) {
+        currentPage = targetPage;
+        renderTableAndStats();
+      }
+    }
+
+    /**
+     * SISTEM LOGIK ISIHAN JADUAL PINTAR (SORT LOGIC)
+     * KEMASKINI PENUH: Memperbaiki ketepatan isihan lajur Tarikh Mula, Tarikh Tamat, dan Tarikh Rekod
+     */
+    function handleSort(key) {
+      let direction = 'asc';
+      if (currentSort.key === key && currentSort.direction === 'asc') {
+        direction = 'desc';
+      }
+      currentSort = { key, direction };
+      
+      bookingsState.sort((a, b) => {
+        let valA = a[key] || '';
+        let valB = b[key] || '';
+        
+        // Isihan Berangka (Bilangan Peserta)
+        if (key === 'BIL_PESERTA') {
+          valA = parseInt(valA, 10) || 0;
+          valB = parseInt(valB, 10) || 0;
+        }
+        
+        // KEMASKINI ISIH TARIKH: Menggunakan analisis berasaskan local time secara terperinci (Hari, Bulan, Tahun, Jam)
+        if (key === 'TARIKH_MULA' || key === 'TARIKH_TAMAT' || key === 'TARIKH_REKOD') {
+          const parseDateToMs = (dateStr) => {
+            if (!dateStr) return 0;
+            let str = String(dateStr).trim();
+            
+            // Mengendalikan format tarikh-masa (cth: "2026-06-15 09:20:01")
+            if (str.includes(' ')) {
+              const normalizedStr = str.replace(' ', 'T');
+              const d = new Date(normalizedStr);
+              if (!isNaN(d.getTime())) return d.getTime();
+            }
+            
+            // Cuba memotong mengikut tanda sengkang (-) atau tanda serong (/)
+            const parts = str.split(/[-/]/);
+            if (parts.length === 3) {
+              let day, month, year;
+              
+              // Jika format adalah YYYY-MM-DD (Bahagian pertama mengandungi 4 digit)
+              if (parts[0].length === 4) {
+                year = parseInt(parts[0], 10);
+                month = parseInt(parts[1], 10) - 1; // JS Month bermula dengan 0
+                day = parseInt(parts[2], 10);
+              } 
+              // Jika format adalah DD-MM-YYYY (Bahagian terakhir mengandungi 4 digit)
+              else if (parts[2].length === 4) {
+                day = parseInt(parts[0], 10);
+                month = parseInt(parts[1], 10) - 1;
+                year = parseInt(parts[2], 10);
+              }
+              
+              // Menggunakan local date untuk mengelakkan ralat herotan zon masa (timezone offset bugs)
+              const localDate = new Date(year, month, day);
+              if (!isNaN(localDate.getTime())) {
+                return localDate.getTime();
+              }
+            }
+            
+            // Fallback sekiranya parsing tersuai gagal
+            const fallback = new Date(str);
+            return !isNaN(fallback.getTime()) ? fallback.getTime() : 0;
+          };
+
+          valA = parseDateToMs(valA);
+          valB = parseDateToMs(valB);
+        }
+
+        // Jalankan perbandingan isihan jitu secara berangka atau aksara
+        if (valA < valB) return direction === 'asc' ? -1 : 1;
+        if (valA > valB) return direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+      
+      currentPage = 1;
+      renderTableAndStats();
+    }
+
+    /**
+     * KEMASKINI PENUNJUK VISUAL IKON ISIHAN (SORT ICONS)
+     */
+    function updateSortIcons() {
+      const keys = ['ID', 'TAJUK', 'JENIS_BILIK', 'BIL_PESERTA', 'TARIKH_MULA', 'JAM_MULA', 'TARIKH_TAMAT', 'JAM_TAMAT', 'PEGAWAI', 'TARIKH_REKOD'];
+      keys.forEach(k => {
+        const icon = document.getElementById(`sort-icon-${k}`);
+        if (icon) {
+          if (currentSort.key === k) {
+            if (currentSort.direction === 'asc') {
+              icon.className = "fa-solid fa-sort-up ml-1 text-blue-600 dark:text-sky-400";
+            } else {
+              icon.className = "fa-solid fa-sort-down ml-1 text-blue-600 dark:text-sky-400";
+            }
+          } else {
+            icon.className = "fa-solid fa-sort ml-1 text-slate-400 hover:text-slate-600";
+          }
+        }
+      });
+    }
+
+    /**
+     * CARTA VISUAL CHART.JS (FUTURISTIK DENGAN KESAN GLOWING GRADIENTS & 3D SCI-FI LOOK)
+     */
+    function buildCharts() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const textColor = isDark ? '#f3f4f6' : '#1e293b';
+      const gridColor = isDark ? 'rgba(148, 163, 184, 0.15)' : 'rgba(203, 213, 225, 0.5)';
+
+      // Ekstrak data untuk carta
+      const roomsMap = {};
+      const sectorsMap = {};
+      bookingsState.forEach(b => {
+        roomsMap[b.JENIS_BILIK] = (roomsMap[b.JENIS_BILIK] || 0) + 1;
+        sectorsMap[b.SEKTOR] = (sectorsMap[b.SEKTOR] || 0) + 1;
+      });
+
+      // --- CARTA 1: BILIK (Doughnut Chart dengan Kesan Floating Holographic Rings) ---
+      if (chartInstanceBilik) chartInstanceBilik.destroy();
+      const canvasBilik = document.getElementById('chartBilik');
+      const ctxBilik = canvasBilik.getContext('2d');
+
+      // Jana palet glowing neon untuk visualisasi holografik
+      const neonPalette = {
+        cyan: { fill: 'rgba(6, 182, 212, 0.85)', stroke: '#06b6d4', glow: 'rgba(6, 182, 212, 0.4)' },
+        magenta: { fill: 'rgba(236, 72, 153, 0.85)', stroke: '#ec4899', glow: 'rgba(236, 72, 153, 0.4)' },
+        emerald: { fill: 'rgba(16, 185, 129, 0.85)', stroke: '#10b981', glow: 'rgba(16, 185, 129, 0.4)' },
+        amber: { fill: 'rgba(245, 158, 11, 0.85)', stroke: '#f59e0b', glow: 'rgba(245, 158, 11, 0.4)' },
+        purple: { fill: 'rgba(139, 92, 246, 0.85)', stroke: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.4)' }
+      };
+
+      const roomLabels = Object.keys(roomsMap);
+      const roomDataValues = Object.values(roomsMap);
+      const fills = [neonPalette.cyan.fill, neonPalette.magenta.fill, neonPalette.emerald.fill, neonPalette.amber.fill, neonPalette.purple.fill];
+      const borders = [neonPalette.cyan.stroke, neonPalette.magenta.stroke, neonPalette.emerald.stroke, neonPalette.amber.stroke, neonPalette.purple.stroke];
+
+      chartInstanceBilik = new Chart(ctxBilik, {
+        type: 'doughnut',
+        data: {
+          labels: roomLabels,
+          datasets: [{
+            data: roomDataValues,
+            backgroundColor: fills,
+            borderColor: borders,
+            borderWidth: 2,
+            hoverOffset: 15,
+            spacing: 6, // Segment separation for the 3D detached look
+            borderRadius: 6 // Rounded segments for high-end UI depth
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '72%', // Sleek futuristic thin ring
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: textColor,
+                padding: 15,
+                font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' }
+              }
+            },
+            tooltip: {
+              backgroundColor: isDark ? '#1e293b' : '#ffffff',
+              titleColor: isDark ? '#ffffff' : '#0f172a',
+              bodyColor: isDark ? '#cbd5e1' : '#334155',
+              borderColor: isDark ? '#38bdf8' : '#000000',
+              borderWidth: 1.5,
+              padding: 10,
+              boxPadding: 6,
+              cornerRadius: 8,
+              usePointStyle: true
+            }
+          },
+          animation: {
+            animateScale: true,
+            animateRotate: true
+          }
+        },
+        // Custom plugin to inject a futuristic outer neon ring glow
+        plugins: [{
+          id: 'customGlowPlugin',
+          beforeDraw: (chart) => {
+            const { ctx, chartArea: { top, bottom, left, right, width, height } } = chart;
+            ctx.save();
+            ctx.strokeStyle = isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(30, 58, 138, 0.08)';
+            ctx.lineWidth = 1;
+            const centerX = left + width / 2;
+            const centerY = top + height / 2;
+            const radius = Math.min(width, height) / 2.3;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }]
+      });
+
+
+      // --- CARTA 2: SEKTOR (Sleek Futuristic 3D-Look Glowing Bar Chart) ---
+      if (chartInstanceSektor) chartInstanceSektor.destroy();
+      const canvasSektor = document.getElementById('chartSektor');
+      const ctxSektor = canvasSektor.getContext('2d');
+
+      const sectorLabels = Object.keys(sectorsMap);
+      const sectorDataValues = Object.values(sectorsMap);
+
+      // Programmatic Gradient creation for neon 3D glowing columns
+      const barGradient = ctxSektor.createLinearGradient(0, 0, 0, 250);
+      if (isDark) {
+        barGradient.addColorStop(0, 'rgba(129, 140, 248, 1)');  // Glowing Indigo Top
+        barGradient.addColorStop(0.5, 'rgba(99, 102, 241, 0.8)'); // Mid Purple
+        barGradient.addColorStop(1, 'rgba(79, 70, 229, 0.15)');  // Translucent Dark Bottom
+      } else {
+        barGradient.addColorStop(0, 'rgba(30, 58, 138, 1)');    // Deep Blue Top
+        barGradient.addColorStop(0.5, 'rgba(59, 130, 246, 0.8)'); // Mid Blue
+        barGradient.addColorStop(1, 'rgba(186, 230, 253, 0.2)');  // Soft Blue Bottom
+      }
+
+      chartInstanceSektor = new Chart(ctxSektor, {
+        type: 'bar',
+        data: {
+          labels: sectorLabels,
+          datasets: [{
+            label: 'Bilangan Tempahan',
+            data: sectorDataValues,
+            backgroundColor: barGradient,
+            borderColor: isDark ? '#818cf8' : '#1e3a8a',
+            borderWidth: 2,
+            borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 }, // Cyber pillar styling
+            borderSkipped: false,
+            barPercentage: 0.5, // Perfect visual column ratio
+            maxBarThickness: 45
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: isDark ? '#1e293b' : '#ffffff',
+              titleColor: isDark ? '#ffffff' : '#0f172a',
+              bodyColor: isDark ? '#cbd5e1' : '#334155',
+              borderColor: isDark ? '#818cf8' : '#000000',
+              borderWidth: 1.5,
+              padding: 10,
+              boxPadding: 6,
+              cornerRadius: 8,
+              usePointStyle: true
+            }
+          },
+          scales: {
+            x: {
+              ticks: { 
+                color: textColor, 
+                font: { family: 'Plus Jakarta Sans', size: 9, weight: 'bold' } 
+              },
+              grid: { display: false }
+            },
+            y: {
+              ticks: { 
+                color: textColor, 
+                precision: 0,
+                font: { family: 'Plus Jakarta Sans', size: 9 }
+              },
+              grid: { 
+                color: gridColor,
+                lineWidth: 1,
+                drawBorder: false
+              }
+            }
+          }
+        },
+        // Draw volumetric neon shadows underneath the pillars
+        plugins: [{
+          id: 'barShadowEffect',
+          beforeDatasetsDraw: (chart) => {
+            const ctx = chart.ctx;
+            ctx.save();
+            ctx.shadowColor = isDark ? 'rgba(99, 102, 241, 0.4)' : 'rgba(30, 58, 138, 0.15)';
+            ctx.shadowBlur = 12;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = -3;
+          },
+          afterDatasetsDraw: (chart) => {
+            chart.ctx.restore();
+          }
+        }]
+      });
+    }
+
+    /**
+     * CARIAN & FILTER JADUAL SPREADSHEET
+     */
+    function filterTable() {
+      currentPage = 1;
+      renderTableAndStats();
+    }
+
+    /**
+     * VALIDASI HAD MAKSIMUM BILIK
+     */
+    function validateRoomCapacity() {
+      const room = document.getElementById('form-jenis-bilik').value;
+      const pax = parseInt(document.getElementById('form-bil-peserta').value, 10);
+      const warning = document.getElementById('capacity-warning');
+      const submitBtn = document.getElementById('submit-btn');
+
+      if (!room || isNaN(pax)) {
+        warning.classList.add('hidden');
+        return true;
+      }
+
+      const limit = ROOM_CAPACITIES[room];
+      if (pax > limit) {
+        warning.classList.remove('hidden');
+        warning.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Amaran: Had maksimum bagi ${room} adalah ${limit} orang!`;
+        return false;
+      } else {
+        warning.classList.add('hidden');
+        return true;
+      }
+    }
+
+    /**
+     * SEMAKAN MASA NYATA BAGI PENCEGAHAN PERTINDIHAN BILIK (CLIENT-SIDE)
+     */
+    function runOverlapAndValidationChecks() {
+      const room = document.getElementById('form-jenis-bilik').value;
+      const tMula = document.getElementById('form-tarikh-mula').value;
+      const jMula = document.getElementById('form-jam-mula').value;
+      const tTamat = document.getElementById('form-tarikh-tamat').value;
+      const jTamat = document.getElementById('form-jam-tamat').value;
+      const warningAlert = document.getElementById('overlap-warning-alert');
+      const submitBtn = document.getElementById('submit-btn');
+
+      if (!room || !tMula || !jMula || !tTamat || !jTamat) {
+        warningAlert.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+        return true;
+      }
+
+      const reqStart = new Date(`${tMula}T${jMula}`);
+      const reqEnd = new Date(`${tTamat}T${jTamat}`);
+
+      if (reqEnd <= reqStart) {
+        warningAlert.classList.remove('hidden');
+        warningAlert.innerHTML = `
+          <i class="fa-solid fa-circle-xmark text-2xl"></i>
+          <div>
+            <p class="font-bold">RALAT TEMPOH MASA!</p>
+            <p class="text-sm">Tarikh/Jam Tamat tidak boleh mendahului atau menyamai Tarikh/Jam Mula.</p>
+          </div>
+        `;
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.4";
+        return false;
+      }
+
+      const isOverlapping = bookingsState.some(b => {
+        if (b.JENIS_BILIK !== room) return false;
+        const existStart = new Date(`${b.TARIKH_MULA}T${b.JAM_MULA}`);
+        const existEnd = new Date(`${b.TARIKH_TAMAT}T${b.JAM_TAMAT}`);
+        return (reqStart < existEnd && reqEnd > existStart);
+      });
+
+      if (isOverlapping) {
+        warningAlert.classList.remove('hidden');
+        warningAlert.innerHTML = `
+          <i class="fa-solid fa-ban text-2xl"></i>
+          <div>
+            <p class="font-bold">AMARAN PERTINDIHAN JADUAL!</p>
+            <p class="text-sm">Bilik ini telah ditempah untuk acara lain pada sela masa yang anda pilih. Sila tukar masa atau bilik.</p>
+          </div>
+        `;
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.4";
+        return false;
+      } else {
+        warningAlert.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+        return true;
+      }
+    }
+
+    /**
+     * HANTAR DATA BORANG
+     */
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      if (!validateRoomCapacity() || !runOverlapAndValidationChecks()) {
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-btn');
+      const spinner = document.getElementById('btn-spinner');
+      const btnText = document.getElementById('btn-text');
+
+      submitBtn.disabled = true;
+      spinner.classList.remove('hidden');
+      btnText.textContent = "Sedang Menyimpan...";
+
+      const formData = {
+        TAJUK: document.getElementById('form-tajuk').value,
+        JENIS_BILIK: document.getElementById('form-jenis-bilik').value,
+        BIL_PESERTA: document.getElementById('form-bil-peserta').value,
+        PEGAWAI: document.getElementById('form-pegawai').value,
+        NO_TEL: document.getElementById('form-no-tel').value.trim(),
+        EMEL: document.getElementById('form-emel').value.trim(),
+        SEKTOR: document.getElementById('form-sektor').value,
+        TARIKH_MULA: document.getElementById('form-tarikh-mula').value,
+        JAM_MULA: document.getElementById('form-jam-mula').value,
+        TARIKH_TAMAT: document.getElementById('form-tarikh-tamat').value,
+        JAM_TAMAT: document.getElementById('form-jam-tamat').value
+      };
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.withSuccessHandler(function(response) {
+          submitBtn.disabled = false;
+          spinner.classList.add('hidden');
+          btnText.textContent = "Hantar Tempahan Bilik";
+
+          if (response.success) {
+            const completeRecord = {
+              ID: response.id,
+              ...response.data,
+              TARIKH_REKOD: new Date().toISOString().replace('T', ' ').split('.')[0]
+            };
+            
+            bookingsState.unshift(completeRecord);
+            currentNewBooking = completeRecord;
+
+            document.getElementById('booking-form').reset();
+            currentPage = 1;
+            populateFilterDropdowns();
+            renderTableAndStats();
+            openSuccessModal(completeRecord);
+          } else {
+            showCustomNotification("Gagal Menyimpan: " + response.message, "red");
+          }
+        }).saveBooking(formData);
+      } else {
+        // Fallback untuk persekitaran preview
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          spinner.classList.add('hidden');
+          btnText.textContent = "Hantar Tempahan Bilik";
+
+          const mockId = "PPDSIK-" + Math.floor(100000 + Math.random() * 900000);
+          const completeRecord = {
+            ID: mockId,
+            ...formData,
+            TARIKH_REKOD: new Date().toISOString().replace('T', ' ').split('.')[0]
+          };
+
+          bookingsState.unshift(completeRecord);
+          currentNewBooking = completeRecord;
+          
+          document.getElementById('booking-form').reset();
+          currentPage = 1;
+          populateFilterDropdowns();
+          renderTableAndStats();
+          openSuccessModal(completeRecord);
+        }, 1200);
+      }
+    }
+
+    /**
+     * PAPAR MODAL KEJAYAAN
+     */
+    function openSuccessModal(record) {
+      document.getElementById('modal-booking-id').textContent = record.ID;
+      document.getElementById('modal-booking-title').textContent = record.TAJUK;
+      document.getElementById('modal-booking-room').textContent = record.JENIS_BILIK;
+      document.getElementById('modal-booking-time').textContent = `${record.TARIKH_MULA} (${formatTimeWithSeconds(record.JAM_MULA)}) - ${record.TARIKH_TAMAT} (${formatTimeWithSeconds(record.JAM_TAMAT)})`;
+      document.getElementById('modal-booking-staff').textContent = record.PEGAWAI;
+
+      const modal = document.getElementById('success-modal');
+      modal.classList.remove('hidden');
+      modal.querySelector('.scale-100')?.classList.remove('scale-95');
+    }
+
+    /**
+     * TUTUP MODAL KEJAYAAN
+     */
+    function closeSuccessModal() {
+      const modal = document.getElementById('success-modal');
+      modal.classList.add('hidden');
+      currentNewBooking = null;
+    }
+
+    /**
+     * SISTEM NOTIFIKASI KHAS
+     */
+    function showCustomNotification(message, color = "green") {
+      const notifDiv = document.createElement('div');
+      notifDiv.className = `fixed bottom-5 right-5 z-50 text-white font-bold p-4 rounded-xl shadow-lg border-2 border-black animate-bounce flex items-center gap-2 ${color === 'red' ? 'bg-red-600' : 'bg-emerald-600'}`;
+      notifDiv.innerHTML = `<i class="fa-solid fa-bell"></i> <span>${message}</span>`;
+      document.body.appendChild(notifDiv);
+      setTimeout(() => notifDiv.remove(), 4000);
+    }
+
+    /**
+     * FORMAT DAN BINA STRUKTUR MESEJ WHATSAPP
+     */
+    function generateWhatsAppMessage(record) {
+      return encodeURIComponent(
+        `🏛️ *PENGESAHAN TEMPAHAN BILIK PPD SIK* 🏛️\n` +
+        `-----------------------------------------\n\n` +
+        `*ID TEMPAHAN:* ${record.ID}\n` +
+        `*TAJUK PROGRAM:* ${record.TAJUK}\n` +
+        `*BILIK MESYUARAT:* ${record.JENIS_BILIK}\n` +
+        `*BILANGAN PESERTA:* ${record.BIL_PESERTA} Orang\n` +
+        `*SEKTOR:* ${record.SEKTOR}\n\n` +
+        `*TARIKH PROGRAM:* ${record.TARIKH_MULA} hingga ${record.TARIKH_TAMAT}\n` +
+        `*MASA PROGRAM:* ${formatTimeWithSeconds(record.JAM_MULA)} - ${formatTimeWithSeconds(record.JAM_TAMAT)}\n\n` +
+        `*PENYELARAS:* ${record.PEGAWAI}\n` +
+        `*NO. TELEFON:* ${record.NO_TEL}\n` +
+        `*E-MEL:* ${record.EMEL}\n\n` +
+        `-----------------------------------------\n` +
+        ` Surat rasmi pengesahan telah dihantar ke e-mel tuan/puan secara automatik. Terima kasih. 🙏`
+      );
+    }
+
+    /**
+     * PICUAN WHATSAPP TERUS DARI MODAL KEJAYAAN
+     */
+    function triggerWhatsAppFromModal() {
+      if (!currentNewBooking) return;
+      const msg = generateWhatsAppMessage(currentNewBooking);
+      const waUrl = `https://wa.me/${currentNewBooking.NO_TEL}?text=${msg}`;
+      window.open(waUrl, '_blank');
+      closeSuccessModal();
+    }
+
+    /**
+     * PICUAN PDF TERUS DARI MODAL KEJAYAAN
+     */
+    function triggerPDFFromModal() {
+      if (!currentNewBooking) return;
+      generateSinglePDF(currentNewBooking.ID);
+    }
+
+    /**
+     * MANUAL WHATSAPP TERUS DARI GRID JADUAL SPREADSHEET
+     */
+    function sendWhatsAppDirect(id) {
+      const record = bookingsState.find(b => b.ID === id);
+      if (!record) return;
+      const msg = generateWhatsAppMessage(record);
+      const waUrl = `https://wa.me/${record.NO_TEL}?text=${msg}`;
+      window.open(waUrl, '_blank');
+    }
+
+    /**
+     * PENJANAAN PDF RASMI FORMAL A4
+     */
+    function generateSinglePDF(id) {
+      const record = bookingsState.find(b => b.ID === id);
+      if (!record) return;
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'mm', 'a4');
+
+      // --- 1. KEPALA SURAT RASMI (PPD SIK LETTERHEAD) ---
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(30, 58, 138); // Blue PPD
+      doc.text("PEJABAT PENDIDIKAN DAERAH SIK", 105, 20, { align: 'center' });
+      
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(71, 85, 105);
+      doc.text("08200 Sik, Kedah", 105, 25, { align: 'center' });
+      doc.text("Tel: 04-4677000 | Faks: 04-4677001 | Emel: adminppdsik@moe.gov.my", 105, 29, { align: 'center' });
+      
+      // Line Pemisah Tebal
+      doc.setDrawColor(15, 23, 42);
+      doc.setLineWidth(1);
+      doc.line(15, 34, 195, 34);
+      doc.setLineWidth(0.3);
+      doc.line(15, 36, 195, 36);
+
+      // --- 2. MAKLUMAT SURAT ---
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(15, 23, 42);
+      doc.text("SURAT KELULUSAN TEMPAHAN BILIK MESYUARAT RASMI", 15, 48);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(10);
+      const tarikhHariIni = new Date().toLocaleDateString('ms-MY', { year: 'numeric', month: 'long', day: 'numeric' });
+      doc.text(`Rujukan Kami : PPDS.100-4/1/2 Jld. 2 (${id})`, 15, 55);
+      doc.text(`Tarikh Cetak  : ${tarikhHariIni}`, 15, 60);
+
+      // Penerima
+      doc.setFont("Helvetica", "bold");
+      doc.text("Kepada:", 15, 72);
+      doc.setFont("Helvetica", "normal");
+      doc.text(`${record.PEGAWAI}`, 15, 77);
+      doc.text(`Sektor / Unit: ${record.SEKTOR}`, 15, 82);
+      doc.text(`Emel: ${record.EMEL} | Tel: +${record.NO_TEL}`, 15, 87);
+
+      doc.text("Tuan / Puan,", 15, 97);
+      
+      // Perenggan Kenyataan
+      const kenyataan = `Perkara di atas adalah dirujuk. Sukacita dimaklumkan bahawa Pejabat Pendidikan Daerah Sik telah meluluskan permohonan tempahan bilik mesyuarat anda. Berikut adalah butiran rasmi tempahan bagi tujuan semakan dan persediaan logistik:`;
+      const splitKenyataan = doc.splitTextToSize(kenyataan, 180);
+      doc.text(splitKenyataan, 15, 103);
+
+      // --- FUNGSI PEMBANTU: MENUKAR FORMAT TARIKH (yyyy-mm-dd -> dd-mm-yyyy) ---
+      function formatDateDMY(dateStr) {
+        if (!dateStr) return '';
+        const parts = dateStr.split('-');
+        if (parts.length === 3 && parts[0].length === 4) {
+          const year = parts[0];
+          const month = parts[1];
+          const day = parts[2];
+          return `${day}-${month}-${year}`;
+        }
+        return dateStr;
+      }
+
+      // --- 3. JADUAL BUTIRAN SPREADSHEET (AutoTable) ---
+      const tableRows = [
+        ["Butiran Acara", "Maklumat Rasmi Tempahan"],
+        ["Tajuk Program / Mesyuarat", record.TAJUK],
+        ["Bilik Mesyuarat Terpilih", record.JENIS_BILIK],
+        ["Bilangan Peserta Berdaftar", `${record.BIL_PESERTA} Orang`],
+        ["Sektor Penganjur", record.SEKTOR],
+        ["Tarikh & Jam Mula", `${formatDateDMY(record.TARIKH_MULA)} (Jam: ${formatTimeWithSeconds(record.JAM_MULA)})`],
+        ["Tarikh & Jam Tamat", `${formatDateDMY(record.TARIKH_TAMAT)} (Jam: ${formatTimeWithSeconds(record.JAM_TAMAT)})`]
+      ];
+
+      doc.autoTable({
+        startY: 118,
+        head: [tableRows[0]],
+        body: tableRows.slice(1),
+        theme: 'striped',
+        headStyles: { fillColor: [30, 58, 138], textColor: [255, 255, 255], fontStyle: 'bold' },
+        styles: { fontSize: 9, cellPadding: 4 },
+        columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } }
+      });
+
+      // --- 4. ARAHAN & TANDATANGAN ---
+      const currentY = doc.lastAutoTable.finalY + 12;
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9);
+      doc.text("Syarat & Peraturan Penggunaan Bilik:", 15, currentY);
+      
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.text("1. Sila pastikan bilik kemas, semua peralatan elektronik (pencahayaan/suis pendingin hawa) ditutup.", 15, currentY + 5);
+      doc.text("2. Tidak dibenarkan membawa masuk makanan berat melainkan dengan kebenaran Ketua Jabatan.", 15, currentY + 10);
+      doc.text("3. Sila lapor sebarang kerosakan inventori yang berlaku semasa program berjalan.", 15, currentY + 15);
+
+      // Tandatangan Ringkas Pelayan Digital
+      const signatureY = currentY + 30;
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(10);
+      doc.text("SEKTOR PERANCANGAN", 15, signatureY);
+      doc.text("PEJABAT PENDIDIKAN DAERAH SIK", 15, signatureY + 5);
+      
+      doc.setFont("Helvetica", "italic");
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.text(`[Dokumen ini dijanakan secara digital. Tandatangan tidak diperlukan. Kod ID Keselamatan: ${id}]`, 15, signatureY + 12);
+
+      // Save PDF ke peranti pengguna
+      doc.save(`Kelulusan-Tempahan-${id}.pdf`);
+    }
+
+    /**
+     * EKSPORT SELURUH REKOD KE FORMAT CSV
+     */
+    function exportToCSV() {
+      if (bookingsState.length === 0) {
+        showCustomNotification("Tiada data untuk dieksport!", "red");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,";
+      const headers = Object.keys(bookingsState[0]);
+      csvContent += headers.join(",") + "\n";
+
+      bookingsState.forEach(row => {
+        const values = headers.map(header => {
+          const escaped = ('' + row[header]).replace(/"/g, '""');
+          return `"${escaped}"`;
+        });
+        csvContent += values.join(",") + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Data-Tempahan-PPDSIK-${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+
+</body>
+</html>
